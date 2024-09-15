@@ -3,7 +3,7 @@ ROCK, PAPER OR SCISSORS
 This is the exercise number 3 of The Odin Project, course of Fundations.
 
 This game includes the DLC "Rock, paper, scissors, lizard or Spock".
-If you don't now what the hell am I speaking of, please visit:
+If you don't know what the hell am I speaking of, please visit:
 
 https://www.wikihow.com/Play-Rock-Paper-Scissors-Lizard-Spock
 
