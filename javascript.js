@@ -21,7 +21,7 @@ const AI_WINS=-1;
 const TIE=0;
 const ERROR=666;	//In case the inputs or outputs are wrong in the internal logic of the application
 
-const NUMBER_OF_ITEMS=5;	//3 for the regular game, 5 for the DLC; other values become in an error
+const NUMBER_OF_ITEMS=5;	//3 for the regular game, 5 for the DLC; other values become in an errorc
 
 let HUD;	//HUD with the messages to the player; substitutes console.log
 
