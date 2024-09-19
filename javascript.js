@@ -2,8 +2,8 @@
 INCLUDES A DLC WITH LIZARD AND SPOCK*/
 /*
 @By theMiki666
-@Date 14-9-24
-@Ver 1.0
+@Date 19.9-24
+@Ver 1.1 With ID, and without number of rounds
 */
 
 //Step 1.5 (not in the requirements, but I need them for a better coding)
@@ -22,8 +22,6 @@ const TIE=0;
 const ERROR=666;	//In case the inputs or outputs are wrong in the internal logic of the application
 
 const NUMBER_OF_ITEMS=5;	//3 for the regular game, 5 for the DLC; other values become in an error
-
-const NUMBER_OF_ROUNDS=5;	//Change the number if you want to play more rounds
 
 let HUD;	//HUD with the messages to the player; substitutes console.log
 
@@ -74,88 +72,7 @@ function numberToString(number){
 	
 }	
 
-//Step 3: Parse human choice
 
-//PROVED
-function getHumanChoice(){
-	let message;
-	let response;
-	let choice;
-	do{
-		message="Choose your choice: rock, paper";
-		if (NUMBER_OF_ITEMS===3){
-			message=message.concat(" or scissors?");
-		}else if (NUMBER_OF_ITEMS===5){
-			message=message.concat(", scissors, lizard or Spock?");
-		}else{
-			console.error(`NUMBER_OF_ITEMS is ${NUMBER_OF_ITEMS} and it must be 3 or 5`);
-			message=message.concat(" or whatever?");
-		}
-		//Now let's filter the response
-		response=prompt (message);
-		response=response.trim();	//Remove spaces
-		response=response.toLowerCase();
-		choice=stringToNumber(response);
-		//If the choice is not correct, we send a message and ask for another response
-		if (!choice){
-			alert ("That is not a valid response");
-		}
-		//If we are playing the normal game but the player choices lizard or spock, there is not a valid choice
-		if (NUMBER_OF_ITEMS!=5 && (choice===LIZARD || choice===SPOCK)){
-			alert ("We are not playing the extended game. Buy the DLC!");
-			choice=false;
-		}
-	}while (!choice);
-	return choice;
-	
-}
-
-//PROVED
-function stringToNumber(myString){
-	//This function tolerate some misspelled words
-	switch (myString){
-		case "r":
-		case "ro":
-		case "roc":
-		case "rock":
-		case "rok":
-			return ROCK;
-		case "p":
-		case "pa":
-		case "pap":
-		case "pape":
-		case "paper":
-		case "papers":
-			return PAPER;
-		case "sc":
-		case "sci":
-		case "scis":
-		case "sciss":
-		case "scisso":
-		case "scissor":
-		case "scissors":
-		case "scisor":
-		case "scisors":
-			return SCISSORS;
-		case "l":
-		case "li":
-		case "liz":
-		case "liza":
-		case "lizar":
-		case "lizard":
-		case "lizzar":
-		case "lizzard":
-			return LIZARD;
-		case "sp":
-		case "spo":
-		case "spoc":
-		case "spock":
-		case "spok":
-			return SPOCK;
-		default:
-			return false;
-	}
-}
 
 //Step 5: Write the logic of a simple round
 
@@ -334,54 +251,6 @@ function whoWinsLogic (itemHuman, itemComputer){
 	
 }
 
-//Step 6: playing several rounds
-
-//proved
-function playGame(){
-	presentation();
-	for (i=1; i<=NUMBER_OF_ROUNDS; i++){
-		writeOnHUD ("Round number "+i);
-		if (i==NUMBER_OF_ROUNDS) writeOnHUD ("LAST ROUND!");
-		playRound();
-		writeOnHUD("-------");
-	}
-	endGame();
-}
-
-//proved
-function presentation(){
-	let message = "Welcome to the game Rock, paper ";
-	if (NUMBER_OF_ITEMS===3){
-		message=message.concat("or scissors!");
-	}else if (NUMBER_OF_ITEMS===5){
-		message=message.concat(", scissors, lizard or Spock! \nThank you for buying the DLC!");
-	}else{
-		console.error(`NUMBER_OF_ITEMS is ${NUMBER_OF_ITEMS} and it must be 3 or 5`);
-		message=message.concat("or whatever! The game is not runnig properly!");
-	}
-	alert (message);
-}
-
-//proved
-function endGame(){
-	writeOnHUD("**************");
-	writeOnHUD("*FINAL RESULT*");
-	writeOnHUD("**************");
-	writeOnHUD (`Your score is ${humanScore}`);
-	writeOnHUD (`Computer score is ${computerScore}`);
-	if (humanScore>computerScore){
-		writeOnHUD ("YOU ARE THE CHAMPION!!!");
-	}else if (humanScore<computerScore){
-		writeOnHUD ("Oh, no! You lost!");
-	}else{
-		writeOnHUD ("It's a draw!");
-	}
-	writeOnHUD("-------");
-	writeOnHUD("Thank you for playing!");
-	if (NUMBER_OF_ITEMS!=5){
-		writeOnHUD ("And don't forget to try the DLC 'Rock, paper, scissors, lizard or Spock'!");
-	}
-}
 
 /*UI BRANCH
 @19.9-24
