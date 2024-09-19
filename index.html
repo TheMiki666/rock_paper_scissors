@@ -6,10 +6,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock, Paper, Scissors</title>
-    <script src="javascript.js"></script>
+    <script src="javascript.js" defer></script>
+    <style>
+        #HUD{
+          min-height: 150px;
+        }
+    </style>
   </head>
   <body>
-    <div class="header">
+    <div id="container">
+      <div id="buttons-container">
+        <button class="item-button" id="button1">Rock</button>
+        <button class="item-button" id="button2">Paper</button>
+        <button class="item-button" id="button3">Scissors</button>
+        <button class="item-button" id="button4">Lizard</button>
+        <button class="item-button" id="button5">Spock</button>
+      </div>
+      <p id="HUD">
+      </p>
+      <button id="reset">Reset</button>
+    </div>
 
   </body>
 </html>

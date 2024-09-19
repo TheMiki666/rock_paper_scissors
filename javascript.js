@@ -21,9 +21,11 @@ const AI_WINS=-1;
 const TIE=0;
 const ERROR=666;	//In case the inputs or outputs are wrong in the internal logic of the application
 
-const NUMBER_OF_ITEMS=3;	//3 for the regular game, 5 for the DLC; other values become in an error
+const NUMBER_OF_ITEMS=5;	//3 for the regular game, 5 for the DLC; other values become in an error
 
 const NUMBER_OF_ROUNDS=5;	//Change the number if you want to play more rounds
+
+let HUD;	//HUD with the messages to the player; substitutes console.log
 
 //Step 4: Initialize scores
 let computerScore=0;
@@ -157,23 +159,24 @@ function stringToNumber(myString){
 
 //Step 5: Write the logic of a simple round
 
-//Proved
-function playRound(){
-	let comItem=getComputerChoiceItem(); //Instead of goetComputerChoice, that returns a string
-	let humanItem=getHumanChoice();
+/*WE HAVE TO CHANGE THIS FUNCTION*/
+function playRound(humanItem){
+	let comItem=getComputerChoiceItem(); //Instead of getComputerChoice, that returns a string
+	//let humanItem=getHumanChoice(); No necessary anymore
 	let result=whoWins(humanItem, comItem);
-	console.log("You chose "+numberToString(humanItem)+".");
-	console.log("Computer chooses "+numberToString(comItem)+".");
-	console.log(explanation);
+	clearHUD();
+	writeOnHUD("You chose "+numberToString(humanItem)+".");
+	writeOnHUD("Computer chooses "+numberToString(comItem)+".");
+	writeOnHUD(explanation);
 	switch (result){
 		case PLAYER_WINS: 
-			console.log ("You win!");
+			writeOnHUD ("You win!");
 			humanScore++;
 		break;
 		case AI_WINS: 
-			console.log ("Computer wins.");
+			writeOnHUD ("Computer wins.");
 			computerScore++;
-		break;
+		break;writeOnHUD
 		case TIE:
 			//Do nothing; explanation already shown
 		break;
@@ -185,14 +188,14 @@ function playRound(){
 
 //PROVED
 function showScores(){
-	console.log (`Your score is ${humanScore}`);
-	console.log (`Computer score is ${computerScore}`);
+	writeOnHUD (`Your score is ${humanScore}`);
+	writeOnHUD (`Computer score is ${computerScore}`);
 	if (humanScore>computerScore){
-		console.log ("You are winning.");
+		writeOnHUD ("You are winning.");
 	}else if (humanScore<computerScore){
-		console.log ("You are losing.");
+		writeOnHUD ("You are losing.");
 	}else{
-		console.log ("The computer and you are tied.");
+		writeOnHUD ("The computer and you are tied.");
 	}
 		
 }
@@ -337,10 +340,10 @@ function whoWinsLogic (itemHuman, itemComputer){
 function playGame(){
 	presentation();
 	for (i=1; i<=NUMBER_OF_ROUNDS; i++){
-		console.log ("Round number "+i);
-		if (i==NUMBER_OF_ROUNDS) console.log ("LAST ROUND!");
+		writeOnHUD ("Round number "+i);
+		if (i==NUMBER_OF_ROUNDS) writeOnHUD ("LAST ROUND!");
 		playRound();
-		console.log("-------");
+		writeOnHUD("-------");
 	}
 	endGame();
 }
@@ -361,27 +364,81 @@ function presentation(){
 
 //proved
 function endGame(){
-	console.log("**************");
-	console.log("*FINAL RESULT*");
-	console.log("**************");
-	console.log (`Your score is ${humanScore}`);
-	console.log (`Computer score is ${computerScore}`);
+	writeOnHUD("**************");
+	writeOnHUD("*FINAL RESULT*");
+	writeOnHUD("**************");
+	writeOnHUD (`Your score is ${humanScore}`);
+	writeOnHUD (`Computer score is ${computerScore}`);
 	if (humanScore>computerScore){
-		console.log ("YOU ARE THE CHAMPION!!!");
+		writeOnHUD ("YOU ARE THE CHAMPION!!!");
 	}else if (humanScore<computerScore){
-		console.log ("Oh, no! You lost!");
+		writeOnHUD ("Oh, no! You lost!");
 	}else{
-		console.log ("It's a draw!");
+		writeOnHUD ("It's a draw!");
 	}
-	console.log("-------");
-	console.log("Thank you for playing!");
+	writeOnHUD("-------");
+	writeOnHUD("Thank you for playing!");
 	if (NUMBER_OF_ITEMS!=5){
-		console.log ("And don't forget to try the DLC 'Rock, paper, scissors, lizard or Spock'!");
+		writeOnHUD ("And don't forget to try the DLC 'Rock, paper, scissors, lizard or Spock'!");
 	}
 }
 
+/*UI BRANCH
+@19.9-24
+These functions are made for the UI branch*/
+
+/*Actives one round with the human item choice depending on the pressed button*/
+function buttonChoice (event){
+	let humanChoice=(parseInt(event.target.id.charAt(6)));  //We need only the final character (the number) of the id
+	playRound(humanChoice);
+}
+
+//MAIN - THIS IS THE STARTING PROGRAM
+document.body.onload= function () {
 
 
-//MAIN
+	//First, we assing funcionality to the buttons
+	const buttons = document.querySelectorAll(".item-button");
+	for (const button of buttons){
+		button.addEventListener ("click", buttonChoice);
+	}
 
-playGame();
+	//Second: we assing the HUD paragraph
+	HUD = document.querySelector("#HUD");
+
+	//Third: we assign the function resetGame to the reset button
+	document.querySelector("#reset").addEventListener("click", resetGame);
+
+	//Four: if the game is not the DLC, we play without lizard and Spock
+	switch (NUMBER_OF_ITEMS){
+		case 5:
+			//The DLC; do nothing
+		break;
+		case 3:
+			//We make invisible buttons lizard and Spock
+			buttons[3].style.visibility="hidden";
+			buttons[4].style.visibility="hidden";
+		break;
+		default:
+			console.error(`NUMBER_OF_ITEMS is ${NUMBER_OF_ITEMS} and it must be 3 or 5`);
+			
+	}
+}
+
+function clearHUD(){
+	HUD.innerHTML=null;
+}
+
+function writeOnHUD(message){
+	let m=document.createTextNode(message);
+	let br=document.createElement("br");
+	HUD.appendChild(br);
+	HUD.appendChild(m);
+}
+
+function resetGame(){
+	humanScore=0;
+	computerScore=0;
+	clearHUD();
+}
+
